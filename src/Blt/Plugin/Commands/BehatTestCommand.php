@@ -205,6 +205,7 @@ class BehatTestCommand extends TestsCommandBase {
       // @todo replace base_url in behat config when internal server is being used.
       $task = $this->taskBehat($this->getConfigValue('composer.bin') . '/behat')
         ->format('pretty')
+        ->format('junit')
         ->arg($behat_path)
         ->option('colors')
         ->noInteraction()
