@@ -4,8 +4,9 @@ namespace Acquia\BltBehat\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\Commands\Tests\TestsCommandBase;
 use Acquia\Blt\Robo\Exceptions\BltException;
-use Acquia\Blt\Robo\Wizards\TestsWizard;
+use Acquia\BltBehat\Blt\Wizards\TestsWizard;
 use Symfony\Component\Console\Output\OutputInterface;
+use League\Container\Definition\DefinitionInterface;
 
 /**
  * Defines commands in the "tests" namespace.
@@ -27,6 +28,13 @@ class BehatTestCommand extends TestsCommandBase {
   public function initialize() {
     parent::initialize();
     $this->behatLogDir = $this->getConfigValue('tests.reports.localDir') . "/behat";
+
+    if ($this::usingLegacyContainer()) {
+      $this->container->add(TestsWizard::class)->withArgument('executor');
+    }
+    else {
+      $this->container->add(TestsWizard::class)->addArgument('executor');
+    }
   }
 
   /**
@@ -56,7 +64,7 @@ class BehatTestCommand extends TestsCommandBase {
    */
   public function behat() {
     if ($this->getConfigValue('behat.validate')) {
-      /** @var \Acquia\Blt\Robo\Wizards\TestsWizard $tests_wizard */
+      /** @var \Acquia\BltBehat\Blt\Wizards\TestsWizard $tests_wizard */
       $tests_wizard = $this->getContainer()->get(TestsWizard::class);
       $tests_wizard->wizardConfigureBehat();
       if (!$this->getInspector()->isBehatConfigured()) {
@@ -188,6 +196,16 @@ class BehatTestCommand extends TestsCommandBase {
         throw new BltException("Behat tests failed!");
       }
     }
+  }
+
+  /**
+   * Determine if the legacy version of league/container is in use.
+   *
+   * @return bool
+   *   TRUE if using the legacy container, FALSE otherwise.
+   */
+  protected static function usingLegacyContainer() {
+    return method_exists(DefinitionInterface::class, 'withArgument');
   }
 
 }
