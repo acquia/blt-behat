@@ -16,7 +16,6 @@
     }
   },
   "require": {
-    "acquia/blt": "^13.2",
     "behat/behat": "^3.1",
     "behat/gherkin" : "^4.6.1",
     "bex/behat-screenshot" : "^2",
@@ -33,5 +32,8 @@
     "psr-4": {
       "Acquia\\BltBehat\\": "./src/"
     }
+  },
+  "require-dev": {
+    "acquia/blt": "^13.5"
   }
 }
