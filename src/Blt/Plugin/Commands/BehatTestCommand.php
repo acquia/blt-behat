@@ -227,7 +227,6 @@ class BehatTestCommand extends TestsCommandBase {
         ->option('colors')
         ->noInteraction()
         ->printMetadata(FALSE)
-        ->stopOnFail()
         ->option('strict')
         ->option('config', $this->getConfigValue('behat.config'))
         ->option('profile', $this->getConfigValue('behat.profile'))
@@ -236,6 +235,10 @@ class BehatTestCommand extends TestsCommandBase {
 
       if ($this->output()->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
         $task->verbose();
+      }
+
+      if ($this->getConfigValue('behat.stop-on-failure', TRUE)) {
+        $task->stopOnFail();
       }
 
       if ($this->getConfigValue('behat.extra')) {
